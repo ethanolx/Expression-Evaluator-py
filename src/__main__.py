@@ -6,7 +6,7 @@ def menu():
 #main program
 class Sorter:
     def __init__(self):
-        self.print_mode = 'h'
+        self.x = 'blank'
               
     def main_program(self):
         
