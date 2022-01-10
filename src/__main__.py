@@ -1,6 +1,6 @@
 #function to print menu
 def menu():
-    print("\n\nPlease select your choice ('1','2','3','4'):")
+    print("\n\nPlease select your choice ('1','2','3'):")
     print("\t1. Evaluate expression\n\t2. Sort expressions\n\t3. Exit")
 
 #main program
@@ -31,7 +31,7 @@ class Sorter:
                 pass
         
             else:
-                #option 4
+                #option 3
                 if user_choice == '3':
                     print("Bye, thanks for using ST1507 DSAA: Expression Evaluator and Sorter ")
                 # if input is not 1 2 3 
