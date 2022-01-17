@@ -7,9 +7,9 @@ def menu():
 class Sorter:
     def __init__(self):
         self.x = 'blank'
-              
+
     def main_program(self):
-        
+
         print("*"*47)
         print("* ST1507 DSAA: Expression Evaluator and Sorter*")
         print("*---------------------------------------------*")
@@ -29,12 +29,12 @@ class Sorter:
             # option 2
             elif user_choice == '2':
                 pass
-        
+
             else:
                 #option 3
                 if user_choice == '3':
                     print("Bye, thanks for using ST1507 DSAA: Expression Evaluator and Sorter ")
-                # if input is not 1 2 3 
+                # if input is not 1 2 3
                 else:
                     print("-"*60)
                     print("\nError! Please enter a number from 1 to 3 and No alphabets!")
