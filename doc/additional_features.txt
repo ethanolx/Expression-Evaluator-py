@@ -1,0 +1,7 @@
+RESHMA
+    1) Accepts non-fully parenthesised + offers user to folly parenthesise expression
+    2) Printing pre-order post-order
+
+ETHAN
+    1) Add operators
+    2) Printing vertically
