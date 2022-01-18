@@ -1,3 +1,6 @@
+from src.parse_tree import ParseTree
+
+
 #function to print menu
 def menu():
     print("\n\nPlease select your choice ('1','2','3'):")
@@ -24,12 +27,18 @@ class Sorter:
 
             #option 1
             if user_choice == '1':
-                pass
+                expression = input('Please enter the expression you want to evaluate:\n')
+                t = ParseTree(depth_symbol='.', mode=1)
+                print("\n\nExpression Tree:")
+                t.read(expression)
+                t.build()
+                print(str(t))
+                print(f'Expression evaluates to:\n{t.evaluate(True)}')
 
             # option 2
             elif user_choice == '2':
                 pass
-
+ 
             else:
                 #option 3
                 if user_choice == '3':
