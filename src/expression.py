@@ -20,3 +20,6 @@ class Expression:
 
     def get_result(self) -> Union[float, int]:
         return self.__result
+
+    def __str__(self) -> str:
+        return self.__expr + ' ==> ' + str(self.__result)
