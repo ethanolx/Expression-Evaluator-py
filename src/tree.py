@@ -1,8 +1,15 @@
-from typing import Any, Callable, Optional
+from typing import List, Literal, Optional
 
+from .math_node import MathNode
+from .temp_node import TempNode
 from .exceptions import InvalidOptionError
 from .node import Node
 from enum import Enum
+
+
+class PrintMode(Enum):
+    HORIZONTAL = 'h'
+    VERTICAL = 'v'
 
 
 class TreeTraversalOrder(Enum):
@@ -14,44 +21,85 @@ class TreeTraversalOrder(Enum):
 class Tree:
     def __init__(self,
                  depth_symbol: str = '.') -> None:
-        self.root: Optional[Node] = None
-        self.currentPointer: Optional[Node] = None
+        self._root: Optional[Node] = None
+        self._currentPointer: Optional[Node] = None
         self.__depth_symbol = depth_symbol
-        self.__print_mode = 'h'
+        self.__print_mode: PrintMode = PrintMode.HORIZONTAL
         self.__print_traversal_order: TreeTraversalOrder = TreeTraversalOrder.IN_ORDER
 
-    def print_inorder(self):
+    @property
+    def print_mode(self):
+        return self.__print_traversal_order
+
+    @print_mode.setter
+    def print_mode(self, new_print_mode: Literal['h', 'v']):
+        if new_print_mode not in {'h', 'v'}:
+            raise InvalidOptionError(f'Unknown option \'{new_print_mode}\' encountered for print_mode (expected \'h\' or \'v\')')
+        available_print_modes = {
+            'h': PrintMode.HORIZONTAL,
+            'v': PrintMode.VERTICAL
+        }
+        self.__print_mode = available_print_modes[new_print_mode]
+
+    @property
+    def print_traversal_order(self):
+        return self.__print_traversal_order
+
+    @print_traversal_order.setter
+    def print_traversal_order(self, new_traversal_order: Literal[0, 1, 2]):
+        if new_traversal_order not in {0, 1, 2}:
+            raise InvalidOptionError(f'Unknown option \'{new_traversal_order}\' encountered for traversal_order (expected 1, 2 or 3)')
+        possible_traversal_orders = [
+            TreeTraversalOrder.PRE_ORDER,
+            TreeTraversalOrder.IN_ORDER,
+            TreeTraversalOrder.POST_ORDER
+        ]
+        self.__print_traversal_order = possible_traversal_orders[new_traversal_order]
+
+    def __print_inorder(self):
         def __internal_recursive(node: Optional[Node], depth: int = 0):
             if node is not None:
-                __internal_recursive(node=node.right, depth=depth + 1)
+                __internal_recursive(node=node._right, depth=depth + 1)
                 print(self.__depth_symbol * depth + str(node))
-                __internal_recursive(node=node.left, depth=depth + 1)
+                __internal_recursive(node=node._left, depth=depth + 1)
+        __internal_recursive(node=self._root, depth=0)
 
-    def reset(self):
-        self.root = None
-        self.currentPointer = None
+    def __print_preorder(self):
+        # Your code here
+        pass
 
-    def print_vertical(self) -> str:
-        self.root.update_widths()
-        current_nodes = [self.root]
+    def __print_postorder(self):
+        # Your code here
+        pass
+
+    def __print_vertical(self) -> str:
+        self._root.update_widths()
+        current_nodes: List[Node] = [self._root]
         next_nodes = []
-        representation = []
-        while list(filter(lambda n: isinstance(n, Node), current_nodes)):
-            row = []
+        while list(filter(lambda n: isinstance(n, MathNode), current_nodes)):
             for n in current_nodes:
-                if isinstance(n, Node):
-                    row.append(n.padded_display())
-                    if n.left is None and n.right is None:
-                        next_nodes.append(n.get_width())
-                    else:
-                        next_nodes.append(n.left)
-                        next_nodes.append(n.right)
+                print(n.display(), end=' ')
+                if n._left is None and n._right is None:
+                    next_nodes.append(TempNode(width=n._width))
                 else:
-                    row.append(' ' * n)
-                    next_nodes.append(n)
+                    next_nodes.append(n._left)
+                    next_nodes.append(n._right)
 
             current_nodes = next_nodes
             next_nodes = []
-            representation.append(' '.join(row))
-        return '\n'.join(representation)
+            print()
 
+    def print_tree(self):
+        if self.__print_mode is PrintMode.VERTICAL:
+            self.__print_vertical()
+        else:
+            if self.__print_traversal_order is TreeTraversalOrder.PRE_ORDER:
+                self.__print_preorder()
+            elif self.__print_traversal_order is TreeTraversalOrder.IN_ORDER:
+                self.__print_inorder()
+            else:
+                self.__print_postorder()
+
+    def reset(self):
+        self._root = None
+        self._currentPointer = None
