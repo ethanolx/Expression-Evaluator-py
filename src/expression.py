@@ -23,3 +23,6 @@ class Expression:
 
     def __str__(self) -> str:
         return self.__expr + ' ==> ' + str(self.__result)
+
+    def __repr__(self) -> str:
+        return self.__str__()
