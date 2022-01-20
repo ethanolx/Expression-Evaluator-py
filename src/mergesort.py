@@ -1,28 +1,3 @@
-from multiprocessing.sharedctypes import Value
-from typing import Dict
-from src.parse_tree import ParseTree
-
-inputfile = input("Please enter input file: ")
-#outputfile = input("Please enter output file: ")
-
-filename = open("src/input.txt", 'r')
-print(">>>Evaluation and sorting started:")
-
-arr1 = []
-arr2 = []
-for lines in filename:
-    line = lines.strip("\n")
-    t = ParseTree(depth_symbol='.', mode=1)
-    print(f"\n\nExpression Tree:{line}")
-    t.read(line)
-    t.build()
-    print(f'Expression evaluates to:{t.evaluate(False)}')
-    arr1.append(line)
-    arr2.append(t.evaluate(False))
-    arr3 = list(zip(arr1,arr2))
-    
-
-
 def mergeSort (l):
     if len (l) > 1:
         mid = int(len(l)/2)
@@ -54,8 +29,5 @@ def mergeSort (l):
             rightIndex +=1
             mergeIndex +=1
 
-for i,j in arr3:
-    mergeSort(j)
 
-print(arr3)
 
