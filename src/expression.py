@@ -1,6 +1,5 @@
 from typing import Union
 
-
 class Expression:
     def __init__(self, expr: str, result: Union[float, int]) -> None:
         self.__expr = expr
