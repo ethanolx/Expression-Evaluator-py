@@ -65,12 +65,20 @@ class Tree:
         __internal_recursive(node=self._root, depth=0)
 
     def __print_preorder(self):
-        # Your code here
-        pass
+        def __internal_recursive(node: Optional[Node], depth: int = 0):
+            if node is not None:
+                __internal_recursive(node=node._root, depth=depth + 1)
+                print(self.__depth_symbol * depth + str(node))
+                __internal_recursive(node=node._left, depth=depth + 1)
+        __internal_recursive(node=self._right, depth=0)
 
     def __print_postorder(self):
-        # Your code here
-        pass
+        def __internal_recursive(node: Optional[Node], depth: int = 0):
+            if node is not None:
+                __internal_recursive(node=node._left, depth=depth + 1)
+                print(self.__depth_symbol * depth + str(node))
+                __internal_recursive(node=node._right, depth=depth + 1)
+        __internal_recursive(node=self._root, depth=0)
 
     def __print_vertical(self) -> str:
         self._root.update_widths()
@@ -90,6 +98,7 @@ class Tree:
             print()
 
     def print_tree(self):
+
         if self.__print_mode is PrintMode.VERTICAL:
             self.__print_vertical()
         else:

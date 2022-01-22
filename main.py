@@ -6,7 +6,7 @@ def menu():
     print("\t1. Evaluate expression\n\t2. Sort expressions\n\t3. Fully Parenthesise an expression\n\t4. Exit")
 
 def traversal_menu():
-    print("\n\nPlease select your choice of traversing ('a','b','c','d'):")
+    print("\n\nPlease select how you want to traverse the Parse Tree ('a','b','c','d'):")
     print("\ta. Inorder (Left, Root, Right) \n\tb. Preorder (Root, Left, Right)\n\tc. Postorder (Left, Right, Root)\n\td. Go to Main Menu")
 
 
@@ -43,18 +43,24 @@ class Sorter:
                         print("\n\nExpression Tree:")
                         t.read(expression)
                         t.build()
-                        print(str(t))
-                        print(f'Expression evaluates to:\n{t.evaluate(True)}')
+                        t.print_tree()
+                        print(f'Expression evaluates to:\n{t.evaluate()}')
 
                     elif traversal_mode == 'b': #Preorder
-                        pass
+                        expression = input('Please enter the expression you want to evaluate:\n')
+                        t = ParseTree(depth_symbol='.', mode=1)
+                        print("\n\nExpression Tree:")
+                        t.read(expression)
+                        t.build()
+                        t.print_tree()
+                        print(f'Expression evaluates to:\n{t.evaluate()}')
 
                     elif traversal_mode == 'c': #PostOrder
                         pass
 
                     else:
                         if traversal_mode == 'd':
-                            print("Switching menu...")
+                            print("Switching to Main Menu...")
                         else:
                             print('\nError! Please enter alphabets a, b, c or d only!')
 
@@ -63,8 +69,10 @@ class Sorter:
                 pass
 
             elif user_choice == '3':
-                expression = input('Please enter an expression:\n')
+                expression = input('Enter an expression you want to fully parenthesise: \n')
                 t = ParseTree(depth_symbol='.', mode=1)
+                t.read(expression)
+                t.build()
                 print(t.reconstruct_expression())
                 
             else:
