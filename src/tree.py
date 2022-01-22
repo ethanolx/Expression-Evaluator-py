@@ -32,8 +32,8 @@ class Tree:
         return self.__print_traversal_order
 
     @print_mode.setter
-    def print_mode(self, new_print_mode: Literal['h', 'v']):
-        if new_print_mode not in {'h', 'v'}:
+    def print_mode(self, new_print_mode: str):
+        if new_print_mode not in 'hv':
             raise InvalidOptionError(f'Unknown option \'{new_print_mode}\' encountered for print_mode (expected \'h\' or \'v\')')
         available_print_modes = {
             'h': PrintMode.HORIZONTAL,
@@ -46,14 +46,14 @@ class Tree:
         return self.__print_traversal_order
 
     @print_traversal_order.setter
-    def print_traversal_order(self, new_traversal_order: Literal[0, 1, 2]):
-        if new_traversal_order not in {0, 1, 2}:
-            raise InvalidOptionError(f'Unknown option \'{new_traversal_order}\' encountered for traversal_order (expected 1, 2 or 3)')
-        possible_traversal_orders = [
-            TreeTraversalOrder.PRE_ORDER,
-            TreeTraversalOrder.IN_ORDER,
-            TreeTraversalOrder.POST_ORDER
-        ]
+    def print_traversal_order(self, new_traversal_order: str):
+        if new_traversal_order not in 'abc':
+            raise InvalidOptionError(f'Unknown option \'{new_traversal_order}\' encountered for traversal_order (expected a, b or c)')
+        possible_traversal_orders = {
+            'a': TreeTraversalOrder.IN_ORDER,
+            'b': TreeTraversalOrder.PRE_ORDER,
+            'c': TreeTraversalOrder.POST_ORDER
+        }
         self.__print_traversal_order = possible_traversal_orders[new_traversal_order]
 
     def __print_inorder(self):
@@ -67,20 +67,20 @@ class Tree:
     def __print_preorder(self):
         def __internal_recursive(node: Optional[Node], depth: int = 0):
             if node is not None:
-                __internal_recursive(node=node._root, depth=depth + 1)
                 print(self.__depth_symbol * depth + str(node))
+                __internal_recursive(node=node._right, depth=depth + 1)
                 __internal_recursive(node=node._left, depth=depth + 1)
-        __internal_recursive(node=self._right, depth=0)
+        __internal_recursive(node=self._root, depth=0)
 
     def __print_postorder(self):
         def __internal_recursive(node: Optional[Node], depth: int = 0):
             if node is not None:
+                __internal_recursive(node=node._right, depth=depth + 1)
                 __internal_recursive(node=node._left, depth=depth + 1)
                 print(self.__depth_symbol * depth + str(node))
-                __internal_recursive(node=node._right, depth=depth + 1)
         __internal_recursive(node=self._root, depth=0)
 
-    def __print_vertical(self) -> str:
+    def __print_vertical(self):
         self._root.update_widths()
         current_nodes: List[Node] = [self._root]
         next_nodes = []
@@ -98,7 +98,6 @@ class Tree:
             print()
 
     def print_tree(self):
-
         if self.__print_mode is PrintMode.VERTICAL:
             self.__print_vertical()
         else:

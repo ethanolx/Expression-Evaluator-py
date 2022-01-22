@@ -15,3 +15,9 @@ def multiline_input(prompt: str):
         else:
             break
     return '\n'.join(lines)
+
+
+def load_config(config_file: str, default_config):
+    with open(file=config_file, mode='r') as f:
+        config = f.read().splitlines()
+        return (*config, *default_config[len(config):])

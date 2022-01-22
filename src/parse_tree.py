@@ -9,7 +9,7 @@ from .tree import Tree
 class ParseTree(Tree):
     def __init__(self,
                  depth_symbol: str = '.',
-                 mode: Literal[1, 2] = 1) -> None:
+                 mode: int = 1) -> None:
         super().__init__(depth_symbol=depth_symbol)
         self.__token_lookup = [None, {
             '+': Operator('+', lambda a, b: a + b, priority=1),
@@ -43,8 +43,8 @@ class ParseTree(Tree):
             raise SyntaxError('Invalid priority (expected 1, 2 or 3)')
         self.__token_lookup[symbol] = Operator(symbol=symbol, func=eval(func), priority=priority)
 
-    def validate_expression(self):
-        return self.__expression.replace(' ', '') == self.reconstruct_expression().replace(' ', '')
+    # def validate_expression(self):
+    #     return self.__expression.replace(' ', '') == self.reconstruct_expression().replace(' ', '')
 
     def parse(self, token_objs: List[MathNode], i: int = 0):
         while i < len(token_objs):
@@ -99,7 +99,6 @@ class ParseTree(Tree):
 
     def read(self, expression: str):
         self.__expression = expression
-        self.reset()
 
     def print_tree(self):
         if self.__prev_build != self.__expression:
@@ -107,6 +106,7 @@ class ParseTree(Tree):
         super().print_tree()
 
     def build(self):
+        self.reset()
         tokens = self.__tokenizer.tokenize(self.__expression)
         token_objs = self.__lexer.lex(tokens)
         self.parse(token_objs)
@@ -115,12 +115,14 @@ class ParseTree(Tree):
     def evaluate(self):
         if self.__prev_build != self.__expression:
             self.build()
-        if self.__strict_mode and not self.validate_expression():
-            raise ValueError(f'Invalid Expression: Did you mean \'{self.reconstruct_expression()}\'')
+        # if self.__strict_mode and not self.validate_expression():
+        #     raise ValueError(f'Invalid Expression: Did you mean \'{self.reconstruct_expression()}\'')
         self._root()
         return self._root._value
 
     def reconstruct_expression(self) -> str:
+        if self.__prev_build != self.__expression:
+            self.build()
         def __reconstruct_internal(node):
             if node._left is not None and node._right is not None:
                 return '(' + __reconstruct_internal(node._left) + ' ' + str(node) + ' ' + __reconstruct_internal(node._right) + ')'
