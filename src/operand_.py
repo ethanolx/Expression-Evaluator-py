@@ -11,5 +11,8 @@ class Operand(MathNode):
     def __gt__(self, _) -> bool:
         return True
 
+    def augment_priority(self):
+        pass
+
     def copy(self) -> 'Operand':
         return Operand(value=self._value)

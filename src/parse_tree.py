@@ -1,6 +1,9 @@
 from typing import List, Literal
+
+from .exceptions import InvalidExpressionError, InvalidOptionError
 from .math_node import MathNode
 from .operator_ import Operator
+from .operand_ import Operand
 from .tokenizer import Tokenizer
 from .lexer import Lexer
 from .tree import Tree
@@ -26,25 +29,28 @@ class ParseTree(Tree):
         }][mode]
         self.__tokenizer = Tokenizer(self.__token_lookup.keys())
         self.__lexer = Lexer(self.__token_lookup)
-        self.__strict_mode = False
         self.__expression = ''
         self.__prev_build = ''
 
     def register_new_operator(self):
         print('Here is a simple wizard that will guide you through registering a custom operator...')
-        symbol = input('Select a symbol besides [{}, ., (, )]:'.format(', '.join(self.__token_lookup.keys())))
-        func = input('Enter function (in Python lambda format): ')
+        symbol = input('Select a symbol besides [{}, ., (, )] with max length of 3: '.format(', '.join(self.__token_lookup.keys()))).strip()
+        if symbol in '.()' or symbol in self.__token_lookup.keys():
+            raise InvalidOptionError(f'Illegal symbol encountered: {symbol}')
+        if len(symbol) > 3:
+            raise InvalidOptionError(f'Symbol {symbol} is too long (max 3)')
+        func = eval('lambda a, b: ' + input('Enter function (in Python format) (parameters are a and b): '))
         print('Enter the priority of your operator')
-        print('\t1: {+, -}'.expandtabs(4))
+        print('\t1: {+, -} [Default]'.expandtabs(4))
         print('\t2: {*, /}'.expandtabs(4))
         print('\t3: {**}'.expandtabs(4))
-        priority = int(input('Operator Priority: '))
+        priority_str = input('Operator Priority: ').strip()
+        priority = int(priority_str) if priority_str != '' else 1
         if priority not in {1, 2, 3}:
             raise SyntaxError('Invalid priority (expected 1, 2 or 3)')
-        self.__token_lookup[symbol] = Operator(symbol=symbol, func=eval(func), priority=priority)
-
-    # def validate_expression(self):
-    #     return self.__expression.replace(' ', '') == self.reconstruct_expression().replace(' ', '')
+        new_operator = Operator(symbol=symbol, func=func, priority=priority)
+        self.__token_lookup[symbol] = new_operator
+        print(f'Successfully registered new operator {repr(new_operator)}')
 
     def parse(self, token_objs: List[MathNode], i: int = 0):
         while i < len(token_objs):
@@ -52,6 +58,8 @@ class ParseTree(Tree):
             if n == '(':
                 i += 1
                 sub_tree, i = ParseTree().parse(token_objs=token_objs, i=i)
+                if sub_tree._root is None:
+                    raise InvalidExpressionError('Empty parentheses encountered')
                 sub_tree._root.augment_priority()
                 self.insert(sub_tree._root)
             elif n == ')':
@@ -101,8 +109,7 @@ class ParseTree(Tree):
         self.__expression = expression
 
     def print_tree(self):
-        if self.__prev_build != self.__expression:
-            self.build()
+        self.__prepare()
         super().print_tree()
 
     def build(self):
@@ -113,16 +120,12 @@ class ParseTree(Tree):
         self.__prev_build = self.__expression
 
     def evaluate(self):
-        if self.__prev_build != self.__expression:
-            self.build()
-        # if self.__strict_mode and not self.validate_expression():
-        #     raise ValueError(f'Invalid Expression: Did you mean \'{self.reconstruct_expression()}\'')
+        self.__prepare()
         self._root()
         return self._root._value
 
     def reconstruct_expression(self) -> str:
-        if self.__prev_build != self.__expression:
-            self.build()
+        self.__prepare()
         def __reconstruct_internal(node):
             if node._left is not None and node._right is not None:
                 return '(' + __reconstruct_internal(node._left) + ' ' + str(node) + ' ' + __reconstruct_internal(node._right) + ')'
@@ -130,3 +133,25 @@ class ParseTree(Tree):
         if self._root._left is None and self._root._right is None:
             return '(' + str(self._root) + ')'
         return __reconstruct_internal(node=self._root)
+
+    def __prepare(self) -> None:
+        if self.__prev_build != self.__expression:
+            self.build()
+        if not self.__validate_parse_tree():
+            raise InvalidExpressionError('Invalid Expression')
+
+    def __validate_parse_tree(self) -> bool:
+        def __internal_recursive(node: MathNode) -> bool:
+            if isinstance(node, Operator):
+                if node._left is None or node._right is None:
+                    return False
+                return __internal_recursive(node._left) and __internal_recursive(node._right)
+            elif isinstance(node, Operand):
+                if node._left is None and node._right is None:
+                    return True
+            return False
+
+        if self._root is None:
+            return False
+
+        return __internal_recursive(node=self._root)

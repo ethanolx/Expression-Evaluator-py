@@ -4,18 +4,8 @@ from .math_node import MathNode
 from .temp_node import TempNode
 from .exceptions import InvalidOptionError
 from .node import Node
-from enum import Enum
-
-
-class PrintMode(Enum):
-    HORIZONTAL = 'h'
-    VERTICAL = 'v'
-
-
-class TreeTraversalOrder(Enum):
-    PRE_ORDER = 0
-    IN_ORDER = 1
-    POST_ORDER = 2
+from .print_mode import PrintMode
+from .tree_traversal_order import TreeTraversalOrder
 
 
 class Tree:
@@ -29,10 +19,12 @@ class Tree:
 
     @property
     def print_mode(self):
-        return self.__print_traversal_order
+        return self.__print_mode
 
     @print_mode.setter
     def print_mode(self, new_print_mode: str):
+        if new_print_mode == '':
+            return
         if new_print_mode not in 'hv':
             raise InvalidOptionError(f'Unknown option \'{new_print_mode}\' encountered for print_mode (expected \'h\' or \'v\')')
         available_print_modes = {
@@ -47,6 +39,8 @@ class Tree:
 
     @print_traversal_order.setter
     def print_traversal_order(self, new_traversal_order: str):
+        if new_traversal_order == '':
+            return
         if new_traversal_order not in 'abc':
             raise InvalidOptionError(f'Unknown option \'{new_traversal_order}\' encountered for traversal_order (expected a, b or c)')
         possible_traversal_orders = {
@@ -111,3 +105,27 @@ class Tree:
     def reset(self):
         self._root = None
         self._currentPointer = None
+
+    def change_print_mode(self):
+        new_print_mode = input('Enter new print mode (h/v): ').strip().lower()
+
+        self.print_mode = new_print_mode
+
+        if new_print_mode == 'h':
+            self.print_traversal_menu()
+            new_traversal_order = input('Enter new print mode (0/1/2): ').strip()
+            self.print_traversal_order = new_traversal_order
+
+        print()
+        print("Printing Mode Updated")
+        print("Orientation:\t{}".format(self.print_mode.value).expandtabs(6))
+        print("Traversal Order:\t{}".format(self.print_traversal_order.value).expandtabs(6))
+
+    @staticmethod
+    def print_traversal_menu():
+        print()
+        print("Please select how you want to traverse the Parse Tree [a/b/c/d]:\n"
+            "\ta. Inorder (Left, Root, Right)\n"
+            "\tb. Preorder (Root, Left, Right)\n"
+            "\tc. Postorder (Left, Right, Root)\n"
+            "\td. Return to Main Menu")
