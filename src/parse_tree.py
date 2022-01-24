@@ -1,5 +1,4 @@
 from typing import List, Literal
-
 from .exceptions import InvalidExpressionError, InvalidOptionError
 from .math_node import MathNode
 from .operator_ import Operator
@@ -7,6 +6,8 @@ from .operand_ import Operand
 from .tokenizer import Tokenizer
 from .lexer import Lexer
 from .tree import Tree
+from .mergesort import mergeSort
+from .expression import Expression
 
 
 class ParseTree(Tree):
@@ -155,3 +156,38 @@ class ParseTree(Tree):
             return False
 
         return __internal_recursive(node=self._root)
+
+    def evaluate_parsetree(self):
+        inputfile = input("Please enter input file: ")
+        outputfile = input("Please enter output file: ")
+        filename = open(inputfile, 'r').read().splitlines()
+
+        list =[]
+        t = ParseTree(depth_symbol='.', mode=1)
+        for i in filename:
+            t.read(i)
+            t.build()
+            exp = Expression(i,t.evaluate())
+            list.append(exp)
+
+        mergeSort(list)
+
+        print("\n>>>Evaluation and sorting started:", end='')
+        header = '\n\n*** Expressions with value ==>'
+        exp = []
+        prev_value = None
+        for i in list:
+            current_value = i.get_result()
+            if current_value != prev_value:
+                var = header + str(current_value)
+                exp.append(var)
+                prev_value = current_value
+            exp.append("\n" + str(i))
+        
+        sortedlist = ''.join(exp)
+        print(sortedlist)
+        print()
+        print(">>>Evaulation and sorting completed!")
+        if outputfile != '':
+            with open(outputfile, "w") as add_to_output_file:
+                add_to_output_file.write(sortedlist[2:])

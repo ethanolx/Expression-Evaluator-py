@@ -46,7 +46,7 @@ def main():
                 print(f'Expression evaluates to:\n{t.evaluate()}')
 
             elif user_choice == '2':
-                pass
+                t.evaluate_parsetree()
 
             elif user_choice == '3':
                 expression = input('Enter an expression you want to fully parenthesise: \n')
@@ -69,5 +69,4 @@ def main():
             input('Press Enter to continue...')
 
 
-if __name__ == '__main__':
-    main()
+main()
