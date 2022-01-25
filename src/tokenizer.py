@@ -11,7 +11,7 @@ class Tokenizer:
         combined = []
         prev_token = ''
         for i, token in enumerate(tokens):
-            if token == '-' and not prev_token[0] in '0123456789.)':
+            if token == '-' and (i == 0 or not prev_token[0] in '0123456789.)'):
                 tokens[i + 1] = '-' + tokens[i + 1]
             else:
                 combined.append(token)

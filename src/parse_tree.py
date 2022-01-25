@@ -8,6 +8,7 @@ from .lexer import Lexer
 from .tree import Tree
 from .mergesort import mergeSort
 from .expression import Expression
+import re
 
 
 class ParseTree(Tree):
@@ -28,6 +29,7 @@ class ParseTree(Tree):
             '/': Operator('/', lambda a, b: round(a / b), priority=2),
             '**': Operator('**', lambda a, b: a % b, priority=3)
         }][mode]
+        self.__strict_mode = False
         self.__tokenizer = Tokenizer(self.__token_lookup.keys())
         self.__lexer = Lexer(self.__token_lookup)
         self.__expression = ''
@@ -107,7 +109,7 @@ class ParseTree(Tree):
         return self.float_child(currentPointer=currentPointer._parent, node=node)
 
     def read(self, expression: str):
-        self.__expression = expression
+        self.__expression = re.sub('\\s', ' ', expression)
 
     def print_tree(self):
         self.__prepare()
@@ -118,12 +120,17 @@ class ParseTree(Tree):
         tokens = self.__tokenizer.tokenize(self.__expression)
         token_objs = self.__lexer.lex(tokens)
         self.parse(token_objs)
+        if not self.__validate_parse_tree():
+            raise InvalidExpressionError('Invalid Expression')
         self.__prev_build = self.__expression
 
     def evaluate(self):
         self.__prepare()
         self._root()
         return self._root._value
+
+    def validate_fully_parenthesised(self):
+        return self.__expression.replace(' ', '') == self.reconstruct_expression().replace(' ', '')
 
     def reconstruct_expression(self) -> str:
         self.__prepare()
@@ -138,8 +145,6 @@ class ParseTree(Tree):
     def __prepare(self) -> None:
         if self.__prev_build != self.__expression:
             self.build()
-        if not self.__validate_parse_tree():
-            raise InvalidExpressionError('Invalid Expression')
 
     def __validate_parse_tree(self) -> bool:
         def __internal_recursive(node: MathNode) -> bool:
@@ -183,7 +188,7 @@ class ParseTree(Tree):
                 exp.append(var)
                 prev_value = current_value
             exp.append("\n" + str(i))
-        
+
         sortedlist = ''.join(exp)
         print(sortedlist)
         print()

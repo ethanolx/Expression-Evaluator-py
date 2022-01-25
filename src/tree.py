@@ -113,7 +113,7 @@ class Tree:
 
         if new_print_mode == 'h':
             self.print_traversal_menu()
-            new_traversal_order = input('Enter new print mode (a/b/c): ').strip()
+            new_traversal_order = input('Enter new print mode (a/b/c): ').strip().lower()
             self.print_traversal_order = new_traversal_order
 
         print()
@@ -124,7 +124,7 @@ class Tree:
     @staticmethod
     def print_traversal_menu():
         print()
-        print("Please select how you want to traverse the Parse Tree [a/b/c/d]:\n"
-            "\ta. Inorder (Left, Root, Right)\n"
-            "\tb. Preorder (Root, Left, Right)\n"
-            "\tc. Postorder (Left, Right, Root)\n")
+        print("Please select how you want to traverse the Parse Tree [a/b/c]:\n"
+            "\ta. Inorder (R, N, L)\n"
+            "\tb. Preorder (N, R, L)\n"
+            "\tc. Postorder (R, L, N)\n")
