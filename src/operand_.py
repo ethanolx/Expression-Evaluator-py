@@ -1,3 +1,9 @@
+'''
+   Class: DAAA/FT/2B03
+Member 1: Ethan Tan (P2012085)
+Member 2: Reshma    (P2011972)
+
+'''
 from src.exceptions import InvalidExpressionError
 from .math_node import MathNode
 
