@@ -7,7 +7,7 @@ Member 2: Reshma    (P2011972)
 '''
 from .temp_node import TempNode
 from .exceptions import InvalidOptionError
-from .print_mode import PrintOrientation
+from .print_orientation import PrintOrientation
 from .tree_traversal_order import TreeTraversalOrder
 
 

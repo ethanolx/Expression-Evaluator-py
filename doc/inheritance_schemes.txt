@@ -5,6 +5,9 @@ ABC ---- Node ---- MathNode ---- Operand
 
 Tree ---- ParseTree
 
+Enum ---- PrintOrientation
+      `-- TreeTraversalOrder
+
 Exception ---- SyntaxError ---- InvalidExpressionError
            |
            `-- InvalidOptionError

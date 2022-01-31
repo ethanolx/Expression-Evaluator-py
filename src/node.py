@@ -4,8 +4,7 @@ Member 1: Ethan Tan (P2012085)
 Member 2: Reshma    (P2011972)
 
 '''
-from typing import Any
-from abc import ABC, abstractmethod
+from abc import ABC
 
 
 # Abstract class for a node
@@ -13,7 +12,6 @@ class Node(ABC):
     def __init__(self,
                  value,
                  width) -> None:
-        # All properties intended to be protected (private within inheritance)
         self._value = value
         self._parent = None
         self._left = None

@@ -1,3 +1,4 @@
+# type: ignore
 '''
 Class   : DAAA/FT/2B03
 Member 1: Ethan Tan (P2012085)
