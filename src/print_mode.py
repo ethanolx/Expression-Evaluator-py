@@ -7,6 +7,7 @@ Member 2: Reshma    (P2011972)
 from enum import Enum
 
 
-class PrintMode(Enum):
+# Enum of all valid print orientations
+class PrintOrientation(Enum):
     HORIZONTAL = 'Horizontal'
     VERTICAL = 'Vertical'

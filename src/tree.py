@@ -1,48 +1,53 @@
+# type: ignore
 '''
 Class   : DAAA/FT/2B03
 Member 1: Ethan Tan (P2012085)
 Member 2: Reshma    (P2011972)
 
 '''
-from typing import List, Literal, Optional
-
-from .math_node import MathNode
 from .temp_node import TempNode
 from .exceptions import InvalidOptionError
-from .node import Node
-from .print_mode import PrintMode
+from .print_mode import PrintOrientation
 from .tree_traversal_order import TreeTraversalOrder
 
 
+# Class for generic trees
 class Tree:
     def __init__(self,
                  depth_symbol: str = '.') -> None:
-        self._root: Optional[Node] = None
-        self._currentPointer: Optional[Node] = None
+        # Protected properties
+        self._root = None
+        self._currentPointer = None
+
+        # Private properties
         self.__depth_symbol = depth_symbol
-        self.__print_mode: PrintMode = PrintMode.HORIZONTAL
+        self.__print_orientation: PrintOrientation = PrintOrientation.HORIZONTAL
         self.__print_traversal_order: TreeTraversalOrder = TreeTraversalOrder.IN_ORDER
 
+    # Getter for print orientation
     @property
-    def print_mode(self):
-        return self.__print_mode
+    def print_orientation(self):
+        return self.__print_orientation
 
-    @print_mode.setter
-    def print_mode(self, new_print_mode: str):
-        if new_print_mode == '':
+    # Setter for print orientation
+    @print_orientation.setter
+    def print_orientation(self, new_print_orientation: str):
+        if new_print_orientation == '':
             return
-        if new_print_mode not in 'hv':
-            raise InvalidOptionError(f'Unknown option \'{new_print_mode}\' encountered for print_mode (expected \'h\' or \'v\')')
+        if new_print_orientation not in 'hv':
+            raise InvalidOptionError(f'Unknown option \'{new_print_orientation}\' encountered for print_mode (expected \'h\' or \'v\')')
         available_print_modes = {
-            'h': PrintMode.HORIZONTAL,
-            'v': PrintMode.VERTICAL
+            'h': PrintOrientation.HORIZONTAL,
+            'v': PrintOrientation.VERTICAL
         }
-        self.__print_mode = available_print_modes[new_print_mode]
+        self.__print_orientation = available_print_modes[new_print_orientation]
 
+    # Getter for print traversal order
     @property
     def print_traversal_order(self):
         return self.__print_traversal_order
 
+    # Setter for print traversal order
     @print_traversal_order.setter
     def print_traversal_order(self, new_traversal_order: str):
         if new_traversal_order == '':
@@ -56,8 +61,19 @@ class Tree:
         }
         self.__print_traversal_order = possible_traversal_orders[new_traversal_order]
 
+    # Prints the available options for tree traversal orders
+    @staticmethod
+    def __print_traversal_menu():
+        print()
+        print("Please select how you want to traverse the tree [a/b/c]:\n"
+              "\ta. Inorder (R, N, L)\n"
+              "\tb. Preorder (N, R, L)\n"
+              "\tc. Postorder (R, L, N)\n")
+
+    # Print methods
+    # DFS
     def __print_inorder(self):
-        def __internal_recursive(node: Optional[Node], depth: int = 0):
+        def __internal_recursive(node, depth: int = 0):
             if node is not None:
                 __internal_recursive(node=node._right, depth=depth + 1)
                 print(self.__depth_symbol * depth + str(node))
@@ -65,7 +81,7 @@ class Tree:
         __internal_recursive(node=self._root, depth=0)
 
     def __print_preorder(self):
-        def __internal_recursive(node: Optional[Node], depth: int = 0):
+        def __internal_recursive(node, depth: int = 0):
             if node is not None:
                 print(self.__depth_symbol * depth + str(node))
                 __internal_recursive(node=node._right, depth=depth + 1)
@@ -73,18 +89,19 @@ class Tree:
         __internal_recursive(node=self._root, depth=0)
 
     def __print_postorder(self):
-        def __internal_recursive(node: Optional[Node], depth: int = 0):
+        def __internal_recursive(node, depth: int = 0):
             if node is not None:
                 __internal_recursive(node=node._right, depth=depth + 1)
                 __internal_recursive(node=node._left, depth=depth + 1)
                 print(self.__depth_symbol * depth + str(node))
         __internal_recursive(node=self._root, depth=0)
 
+    # BFS
     def __print_vertical(self):
         self._root.update_widths()
-        current_nodes: List[Node] = [self._root]
+        current_nodes = [self._root]
         next_nodes = []
-        while list(filter(lambda n: isinstance(n, MathNode), current_nodes)):
+        while any(map(lambda n: not (isinstance(n, TempNode) or n is None), current_nodes)):
             for n in current_nodes:
                 print(n.display(), end=' ')
                 if n._left is None and n._right is None:
@@ -97,8 +114,10 @@ class Tree:
             next_nodes = []
             print()
 
+    # Options 1 & 2 - Public method for printing the tree
+    #   - Uses __print_orientation and __print_traversal_order to determine how to print the tree
     def print_tree(self):
-        if self.__print_mode is PrintMode.VERTICAL:
+        if self.__print_orientation is PrintOrientation.VERTICAL:
             self.__print_vertical()
         else:
             if self.__print_traversal_order is TreeTraversalOrder.PRE_ORDER:
@@ -108,29 +127,23 @@ class Tree:
             else:
                 self.__print_postorder()
 
+    # Resets the pointers
     def reset(self):
         self._root = None
         self._currentPointer = None
 
+    # Oprion 5 - Interface for users to change the print orientation and/or traversal order
     def change_print_mode(self):
-        new_print_mode = input('Enter new print mode (h/v): ').strip().lower()
+        new_print_orientation = input('Enter new print mode (h/v): ').strip().lower()
 
-        self.print_mode = new_print_mode
+        self.print_orientation = new_print_orientation
 
-        if new_print_mode == 'h':
-            self.print_traversal_menu()
+        if new_print_orientation == 'h':
+            self.__print_traversal_menu()
             new_traversal_order = input('Enter new print mode (a/b/c): ').strip().lower()
             self.print_traversal_order = new_traversal_order
 
         print()
         print("Printing Mode Updated")
-        print("Orientation:\t{}".format(self.print_mode.value).expandtabs(6))
+        print("Orientation:\t{}".format(self.print_orientation.value).expandtabs(6))
         print("Traversal Order:\t{}".format(self.print_traversal_order.value).expandtabs(6))
-
-    @staticmethod
-    def print_traversal_menu():
-        print()
-        print("Please select how you want to traverse the Parse Tree [a/b/c]:\n"
-            "\ta. Inorder (R, N, L)\n"
-            "\tb. Preorder (N, R, L)\n"
-            "\tc. Postorder (R, L, N)\n")

@@ -9,14 +9,19 @@ from .operator_ import Operator
 from .operand_ import Operand
 
 
+# Performs lexical analysis on extracted tokens,
+#   converting them into their actual objects
 class Lexer:
     def __init__(self,
                  token_lookup: Dict[str, Operator]) -> None:
         self.__token_lookup = token_lookup
 
+    # Returns a copy of the object of the associated operand or operator
     def __lex_token(self, token):
         return self.__token_lookup[token].copy()
 
+    # Iterates through a given list of tokens, and
+    #   conducts lexical analysis
     def lex(self, tokens):
         lexed_token_list = []
 

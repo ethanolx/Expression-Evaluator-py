@@ -1,0 +1,10 @@
+ABC ---- Node ---- MathNode ---- Operand
+               |             `-- Operator
+               |
+               `-- TempNode
+
+Tree ---- ParseTree
+
+Exception ---- SyntaxError ---- InvalidExpressionError
+           |
+           `-- InvalidOptionError

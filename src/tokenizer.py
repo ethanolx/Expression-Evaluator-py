@@ -8,11 +8,14 @@ from typing import List, Set
 import re
 
 
+# Extracts tokens from a string expression
 class Tokenizer:
     def __init__(self,
                  registered_tokens: Set[str]) -> None:
         self.__registered_tokens = registered_tokens
 
+    # Identifies negative numbers, and
+    #   groups the prefix - with the corresponding operand
     def __combine(self, tokens: List[str]) -> List[str]:
         combined = []
         prev_token = ''
@@ -24,6 +27,7 @@ class Tokenizer:
             prev_token = token
         return combined
 
+    # Extracts plain tokens using regex
     def tokenize(self, expression: str):
         expression_simplified = re.sub('\\s', '', expression)
         known_symbols = set(''.join(self.__registered_tokens)).difference('-')
