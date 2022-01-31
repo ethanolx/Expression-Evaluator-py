@@ -10,7 +10,7 @@ from .node import Node
 # Class for temporary nodes for vertical printing
 class TempNode(Node):
     def __init__(self, width) -> None:
-        super().__init__(value=None, width=width)
+        super().__init__(value=' ' * width, width=width)
 
     # Pad with spaces
     def display(self):

@@ -15,8 +15,8 @@ from .operand_ import Operand
 from .tokenizer import Tokenizer
 from .lexer import Lexer
 from .tree import Tree
-from .mergesort import mergeSort
 from .expression import Expression
+from .utils.mergesort import mergeSort
 
 # For registering custom operators
 import math
@@ -51,7 +51,7 @@ class ParseTree(Tree):
     # General parse tree utilities
     # Inserts a new node
     # Time complexity: O(h), h=tree height
-    def __insert(self, node: MathNode):
+    def insert(self, node: MathNode):
         if self._root is None:
             self.__assign_root(node=node)
         elif self.currentPointer._left is None:
@@ -104,11 +104,11 @@ class ParseTree(Tree):
                 if sub_tree._root is None:
                     raise InvalidExpressionError('Empty parentheses encountered')
                 sub_tree._root.augment_priority()
-                self.__insert(sub_tree._root)
+                self.insert(sub_tree._root)
             elif n == ')':
                 return self, i
             else:
-                self.__insert(n)
+                self.insert(n)
             i += 1
         return self, i
 

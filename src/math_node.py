@@ -35,3 +35,16 @@ class MathNode(Node):
     @abstractmethod
     def __gt__(self, otherNode) -> bool:
         pass
+
+    # Abstract methods
+    @abstractmethod
+    def get_priority(self) -> int:
+        pass
+
+    @abstractmethod
+    def augment_priority(self) -> None:
+        pass
+
+    @abstractmethod
+    def copy(self):
+        pass
