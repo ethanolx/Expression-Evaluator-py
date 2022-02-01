@@ -1,6 +1,9 @@
+# Python Virtual Environment
+.venv
+
+# Python Cache Binaries
 **/__pycache__/
+
+# Temporary Items
 tmp/
 tmp*
-.venv
-data/*
-!data/expressions.txt
