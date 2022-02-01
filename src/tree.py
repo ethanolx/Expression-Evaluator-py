@@ -101,14 +101,19 @@ class Tree:
         self._root.update_widths()
         current_nodes = [self._root]
         next_nodes = []
-        while any(map(lambda n: not (isinstance(n, TempNode) or n is None), current_nodes)):
+
+        # Continue while there is at least one non-temporary node left
+        while any(map(lambda n: not isinstance(n, TempNode), current_nodes)):
+            print(len(current_nodes))
             for n in current_nodes:
                 print(n.display(), end=' ')
                 if n._left is None and n._right is None:
                     next_nodes.append(TempNode(width=n._width))
                 else:
-                    next_nodes.append(n._left)
-                    next_nodes.append(n._right)
+                    if n._left is not None:
+                        next_nodes.append(n._left)
+                    if n._right is not None:
+                        next_nodes.append(n._right)
 
             current_nodes = next_nodes
             next_nodes = []

@@ -29,6 +29,6 @@ def multiline_input(prompt: str):
 def load_config(config_file: str, default_config):
     if os.path.exists(config_file):
         with open(file=config_file, mode='r') as f:
-            config = f.read().strip().splitlines()
+            config = f.read().rstrip().splitlines()
             return (*config, *default_config[len(config):])
     return default_config

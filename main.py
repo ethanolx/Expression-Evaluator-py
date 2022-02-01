@@ -41,13 +41,8 @@ def menu():
 def main():
     # Loads configuration,
     #   otherwise falls back to default options
-    try:
-        depth_symbol, operator_mode = load_config(config_file=CONFIG_FILE, default_config=['.', 1])
-        t = ParseTree(depth_symbol=depth_symbol[0], mode=int(operator_mode))
-    except:
-        t = ParseTree()
-        print('Invalid Configuration File >:(')
-        input('Press Enter to continue...')
+    depth_symbol, operator_mode = load_config(config_file=CONFIG_FILE, default_config=['.', 1])
+    t = ParseTree(depth_symbol=depth_symbol[0], mode=int(operator_mode))
 
     # Infinite loop,
     #   until user exits the program
@@ -60,7 +55,7 @@ def main():
             menu()
 
             # Allow user to select option
-            user_choice = input("Enter choice: ")
+            user_choice = input("Enter choice: ").strip()
 
             # Evaluate an expression (1 - fully parenthesised only / 2 - any valid expression)
             #   - Parse tree will be displayed
@@ -103,7 +98,7 @@ def main():
 
             # Exits/Quits and thus terminates the program
             elif user_choice == '7':
-                print("Bye, thanks for using ST1507 DSAA: Expression Evaluator and Sorter ")
+                print("Bye, thanks for using ST1507 DSAA: Expression Evaluator and Sorter :D")
 
         except FileNotFoundError as e:
             # Truncates the prefix '[Errno 2]'
