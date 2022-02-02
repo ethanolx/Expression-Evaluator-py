@@ -10,7 +10,7 @@ from typing import Tuple, Union
 # Wrapper class for sorting expressions based on custom function
 class Expression:
     def __init__(self, expr: str, result: Union[float, int]) -> None:
-        self.__expr = expr
+        self.__expr = expr.replace(' ', '')
         self.__result = result
 
     # Comparison function

@@ -41,8 +41,11 @@ def menu():
 def main():
     # Loads configuration,
     #   otherwise falls back to default options
-    depth_symbol, operator_mode = load_config(config_file=CONFIG_FILE, default_config=['.', 1])
-    t = ParseTree(depth_symbol=depth_symbol[0], mode=int(operator_mode))
+    try:
+        depth_symbol, operator_mode = load_config(config_file=CONFIG_FILE, default_config=['.', 1])
+        t = ParseTree(depth_symbol=depth_symbol[0], mode=int(operator_mode))
+    except:
+        t = ParseTree()
 
     # Infinite loop,
     #   until user exits the program
