@@ -104,7 +104,6 @@ class Tree:
 
         # Continue while there is at least one non-temporary node left
         while any(map(lambda n: not isinstance(n, TempNode), current_nodes)):
-            print(len(current_nodes))
             for n in current_nodes:
                 print(n.display(), end=' ')
                 if n._left is None and n._right is None:
