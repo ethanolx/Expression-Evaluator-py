@@ -14,7 +14,8 @@ CA2 ---- data ---- input.txt
      |
      |-- doc ---- CA2_Brief.pdf
      |        |-- inheritance_scheme.txt
-     |        `-- report.docx
+     |        |-- report.docx
+     |        `-- report.pdf
      |
      |-- src ---- utils ---- io_utils.py
      |        |          `-- mergesort.py
@@ -63,4 +64,4 @@ python main.py path/to/config/file.txt
 
 - Assignment Brief: `doc/CA2_Brief.pdf`
 - Inheritance Scheme: `doc/inheritance_scheme.txt`
-- Report: `doc/report.docx`
+- Report: `doc/report.docx` / `doc/report.pdf`
